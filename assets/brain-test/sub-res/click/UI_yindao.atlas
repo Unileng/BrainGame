@@ -1,0 +1,20 @@
+
+UI_yindao.png
+size: 124,264
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+gggg
+  rotate: false
+  xy: 2, 2
+  size: 120, 120
+  orig: 120, 120
+  offset: 0, 0
+  index: -1
+shou
+  rotate: false
+  xy: 2, 124
+  size: 114, 138
+  orig: 114, 138
+  offset: 0, 0
+  index: -1
