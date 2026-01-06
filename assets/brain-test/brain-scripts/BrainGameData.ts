@@ -51,12 +51,44 @@ export const BrainGameLevelUrl = {
 }
 
 export class BrainGameData {
-    public static lockMaxLevel = 1;       //解锁到的关卡等级
     public static maxLevel = 41;         //最大关卡等级
-    public static currentLevel = 1;     //当前关卡等级
     public static uiType = BrainGameUIType.Menu;       //当前游戏UI类型
 
     private static _tipCardCount = 0;
+
+    private static _lockMaxLevel = 1;
+
+    private static _currentLevel = 1;
+
+    private static _audioEnabled = true;
+
+    public static get audioEnabled() {
+        return this._audioEnabled;
+    }
+
+    public static set audioEnabled(enabled: boolean) {
+        this._audioEnabled = enabled;
+        localStorage.setItem('brainGameAudioEnabled', enabled.toString());
+    }
+
+    public static get lockMaxLevel() {
+        return this._lockMaxLevel;
+    }
+    
+
+    public static set lockMaxLevel(level: number) {
+        this._lockMaxLevel = level;
+        localStorage.setItem('brainGameLockMaxLevel', level.toString());
+    }
+
+    public static get currentLevel() {
+        return this._currentLevel;
+    }
+
+    public static set currentLevel(level: number) {
+        this._currentLevel = level;
+        localStorage.setItem('brainGameLevel', level.toString());
+    }
 
     public static initData() {
         let localCard = localStorage.getItem('brainGameTipCard');
@@ -64,6 +96,24 @@ export class BrainGameData {
             this._tipCardCount = parseInt(localCard);
         } else {
             this._tipCardCount = 0;
+        }
+        let localLevel = localStorage.getItem('brainGameLevel');
+        if (localLevel) {
+            this._currentLevel = parseInt(localLevel);
+        } else {
+            this._currentLevel = 1;
+        }
+        let localLockMaxLevel = localStorage.getItem('brainGameLockMaxLevel');
+        if (localLockMaxLevel) {
+            this._lockMaxLevel = parseInt(localLockMaxLevel);
+        } else {
+            this._lockMaxLevel = 1;
+        }
+        let localAudioEnabled = localStorage.getItem('brainGameAudioEnabled');
+        if (localAudioEnabled) {
+            this._audioEnabled = localAudioEnabled === 'true';
+        } else {
+            this._audioEnabled = true;
         }
     }
 
