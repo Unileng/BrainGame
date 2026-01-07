@@ -9,6 +9,7 @@ import { EventDef } from './EventDef';
 import { BrainGameTouchMoveCom } from './BrainGameTouchMoveCom';
 import SdkManager from '../../scripts/SdkManager';
 import { BrainGameSetting } from './BrainGameSetting';
+import { AudioMgr } from './AudioMgr';
 const { ccclass, property } = _decorator;
 
 @ccclass('BrainGame/BrainGameMain')
@@ -53,6 +54,8 @@ export class BrainGameMain extends MsgHandlerComponent {
         this.updateToolCount();
         this.levelUI.hide();
         this.settingNode.hide();
+
+        AudioMgr.ins().playMusicFromBundle('brain-res', 'audio/bg');
         EventManager.on(EventDef.BRAINGAME_EVT_ANSWER_RIGHT, this.answerRight.bind(this));    // 回答正确广播
         EventManager.on(EventDef.BRAINGAME_EVT_ENTER, this.enterGame.bind(this));    // 进入游戏广播
         EventManager.on(EventDef.BRAINGAME_EVT_UPDATE_TOOL_COUNT, this.updateToolCount.bind(this));    // 更新工具数量广播

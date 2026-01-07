@@ -1,5 +1,6 @@
 import { _decorator, Component, Node, Toggle } from 'cc';
 import { BrainGameData } from './BrainGameData';
+import { AudioMgr } from './AudioMgr';
 const { ccclass, property } = _decorator;
 
 @ccclass('BrainGameSetting')
@@ -15,8 +16,8 @@ export class BrainGameSetting extends Component {
     show(closeClickCB: () => void) {
         this.closeClickCB = closeClickCB;
         this.node.active = true;
-        this.closeBtn.isChecked = !BrainGameData.audioEnabled;
-        this.openBtn.isChecked = BrainGameData.audioEnabled;
+        this.closeBtn.isChecked = !AudioMgr.ins().isMusicMuted();
+        this.openBtn.isChecked = AudioMgr.ins().isMusicMuted();
     }
 
     hide(){
@@ -25,7 +26,8 @@ export class BrainGameSetting extends Component {
 
     onToggleSettingClick() {
        let isOpen = this.openBtn.isChecked;
-       BrainGameData.audioEnabled = isOpen;
+       AudioMgr.ins().setMusicMuted(!isOpen);
+       AudioMgr.ins().playMusicFromBundle('brain-res', 'audio/bg');
     }
 
     onBtnCloseClick() {

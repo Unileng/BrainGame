@@ -60,17 +60,6 @@ export class BrainGameData {
 
     private static _currentLevel = 1;
 
-    private static _audioEnabled = true;
-
-    public static get audioEnabled() {
-        return this._audioEnabled;
-    }
-
-    public static set audioEnabled(enabled: boolean) {
-        this._audioEnabled = enabled;
-        localStorage.setItem('brainGameAudioEnabled', enabled.toString());
-    }
-
     public static get lockMaxLevel() {
         return this._lockMaxLevel;
     }
@@ -108,12 +97,6 @@ export class BrainGameData {
             this._lockMaxLevel = parseInt(localLockMaxLevel);
         } else {
             this._lockMaxLevel = 1;
-        }
-        let localAudioEnabled = localStorage.getItem('brainGameAudioEnabled');
-        if (localAudioEnabled) {
-            this._audioEnabled = localAudioEnabled === 'true';
-        } else {
-            this._audioEnabled = true;
         }
     }
 
