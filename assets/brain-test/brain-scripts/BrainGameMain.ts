@@ -54,11 +54,19 @@ export class BrainGameMain extends MsgHandlerComponent {
         this.updateToolCount();
         this.levelUI.hide();
         this.settingNode.hide();
-
+        this.initSdk();
         AudioMgr.ins().playMusicFromBundle('brain-res', 'audio/bg');
         EventManager.on(EventDef.BRAINGAME_EVT_ANSWER_RIGHT, this.answerRight.bind(this));    // 回答正确广播
         EventManager.on(EventDef.BRAINGAME_EVT_ENTER, this.enterGame.bind(this));    // 进入游戏广播
         EventManager.on(EventDef.BRAINGAME_EVT_UPDATE_TOOL_COUNT, this.updateToolCount.bind(this));    // 更新工具数量广播
+    }
+
+    initSdk() {
+        // 加载sdk
+        SdkManager.instance.passiveShare()
+        SdkManager.instance.initBannerAd()
+        SdkManager.instance.initInterstitialAd()
+        SdkManager.instance.initVideoAd()
     }
 
     initUI() {
@@ -74,6 +82,7 @@ export class BrainGameMain extends MsgHandlerComponent {
         this.tipNode.active = false;
         BrainGameData.menuLight = this.lightMoveCom;
         BrainGameData.menuTitle = this.uiTitle.node;
+        SdkManager.instance.toggleBannerAd(false);
     }
 
     onBtnLevelClick() {
@@ -124,6 +133,7 @@ export class BrainGameMain extends MsgHandlerComponent {
                 SdkManager.instance.showVideoAd(() => {
                     BrainGameData.tipCardCount += BrainGameData.shareGetCount;
                     EventManager.emit(EventDef.BRAINGAME_EVT_UPDATE_TOOL_COUNT);    // 更新工具数量广播
+                    this.showTip(`获得${BrainGameData.shareGetCount}个工具`);
                 });
             });
         }
@@ -136,7 +146,6 @@ export class BrainGameMain extends MsgHandlerComponent {
         this.uigame.active = false;
         this.gameBtnList.active = false;
         this.uiTitle.string = `设置`;
-
         this.settingNode.node.active = true;
         this.settingNode.show(this.initUI.bind(this));
     }
@@ -182,6 +191,8 @@ export class BrainGameMain extends MsgHandlerComponent {
             this.initUI();
             this.initGame();
         };
+        SdkManager.instance.toggleBannerAd(true);
+        SdkManager.instance.showInterstitialAd();
     }
 
     private showTip(tip: string, confirmCB: () => void = null) {

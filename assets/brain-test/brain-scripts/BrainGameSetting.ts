@@ -1,6 +1,7 @@
 import { _decorator, Component, Node, Toggle } from 'cc';
 import { BrainGameData } from './BrainGameData';
 import { AudioMgr } from './AudioMgr';
+import SdkManager from '../../scripts/SdkManager';
 const { ccclass, property } = _decorator;
 
 @ccclass('BrainGameSetting')
@@ -14,6 +15,8 @@ export class BrainGameSetting extends Component {
     closeClickCB: () => void = null;
 
     show(closeClickCB: () => void) {
+        SdkManager.instance.toggleBannerAd(true);
+        SdkManager.instance.showInterstitialAd();
         this.closeClickCB = closeClickCB;
         this.node.active = true;
         this.closeBtn.isChecked = !AudioMgr.ins().isMusicMuted();
@@ -21,6 +24,7 @@ export class BrainGameSetting extends Component {
     }
 
     hide(){
+        SdkManager.instance.toggleBannerAd(false);
         this.node.active = false;
     }
 
@@ -31,7 +35,7 @@ export class BrainGameSetting extends Component {
     }
 
     onBtnCloseClick() {
-        this.node.active = false;
+        this.hide();
         if (this.closeClickCB) {
             this.closeClickCB();
         }

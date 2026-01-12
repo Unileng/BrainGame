@@ -1,7 +1,7 @@
 import { _decorator, Component, Label, Node } from 'cc';
 import { BrainGameData } from './BrainGameData';
-import { UIMgr } from 'db://assets/scripts/managers/UIMgr';
 import { BrainLevelItem } from './BrainLevelItem';
+import SdkManager from '../../scripts/SdkManager';
 const { ccclass, property } = _decorator;
 
 @ccclass('BrainGame/BrainLevelUI')
@@ -20,6 +20,7 @@ export class BrainLevelUI extends Component {
     private currentPage = 0;
 
     show(hideCallback: Function = null) {
+        SdkManager.instance.showInterstitialAd();
         this.node.active = true;
         this.hideCallback = hideCallback;
         this.currentPage = Math.floor((BrainGameData.currentLevel - 1) / this.levels.length);

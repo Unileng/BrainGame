@@ -67,4 +67,6 @@ declare namespace tt {
     export function login(any): any;
 
     export function getLaunchOptionsSync(): any;
+
+    export function onShow(options: any): void;
 }

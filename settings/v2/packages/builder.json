@@ -53,7 +53,7 @@
               },
               "bytedance-mini-game": {
                 "isRemote": false,
-                "compressionType": "merge_dep"
+                "compressionType": "subpackage"
               },
               "fb-instant-games": {
                 "isRemote": false,

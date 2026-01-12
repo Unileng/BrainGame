@@ -12,13 +12,13 @@ export default class SdkManager {
 
     shareMsg: string = "这道题好难，快来帮我看一下？"
     // 激励视频
-    videoId: string = 'o2tonaq1ti37smeb8d'
+    videoId: string = '176ehhj6bejceanpbt'
     private videoAd = null
     // 插屏
-    interstitialId: string = 'd1c0dfhk5h3595p4r1'
+    interstitialId: string = 'd8rimf403te1dc99nd'
     private interstitialAd = null
     // 横幅
-    bannerId: string = 'cmlk6pm8h4e18g3blq'
+    bannerId: string = 'e5ejgs0is031h8h4i3'
     private bannerAd = null
     private showBanner = false;
 
@@ -101,12 +101,13 @@ export default class SdkManager {
                 console.log('【流量主】请配置横幅广告ID')
                 return
             }
+            let winSize = tt.getSystemInfoSync().safeArea;
             if (this.bannerAd == null) {
                 this.bannerAd = tt.createBannerAd({
                     adUnitId: this.bannerId,
                     adIntervals: 30,
                     style: {
-                        width: this.winSize.windowWidth,
+                        width: winSize.windowWidth,
                     }
                 });
                 
@@ -134,6 +135,7 @@ export default class SdkManager {
 
     // 横幅展示
     toggleBannerAd(isShow: boolean) {
+        return;
         if (sys.platform == sys.Platform.WECHAT_GAME) {
             if (this.bannerAd) {
                 isShow ? this.bannerAd.show() : this.bannerAd.hide();
