@@ -1,4 +1,4 @@
-import { _decorator, Component, EPhysics2DDrawFlags, instantiate, Label, Node, PhysicsSystem2D, tween, Tween, Vec3 } from 'cc';
+import { _decorator, Component, EPhysics2DDrawFlags, instantiate, Label, Node, PhysicsSystem2D, sys, tween, Tween, Vec3 } from 'cc';
 import { BrainLevelUI } from './BrainLevelUI';
 import { BrainGameData, BrainGameLevelUrl, BrainGameUIType } from './BrainGameData';
 import { BrainGameMenu } from './BrainGameMenu';
@@ -113,9 +113,20 @@ export class BrainGameMain extends MsgHandlerComponent {
 
     onBtnGetToolClick() {
         //获取工具
-        SdkManager.instance.activeShare();
-        BrainGameData.tipCardCount += BrainGameData.shareGetCount;
-        EventManager.emit(EventDef.BRAINGAME_EVT_UPDATE_TOOL_COUNT);    // 更新工具数量广播
+        if(sys.platform == sys.Platform.WECHAT_GAME){
+            this.showTip(`是否分享获取${BrainGameData.shareGetCount}个工具?`, () => {
+                SdkManager.instance.activeShare();
+                BrainGameData.tipCardCount += BrainGameData.shareGetCount;
+                EventManager.emit(EventDef.BRAINGAME_EVT_UPDATE_TOOL_COUNT);    // 更新工具数量广播
+            });
+        }else{
+            this.showTip(`是否观看视频获取${BrainGameData.shareGetCount}个工具?`, () => {
+                SdkManager.instance.showVideoAd(() => {
+                    BrainGameData.tipCardCount += BrainGameData.shareGetCount;
+                    EventManager.emit(EventDef.BRAINGAME_EVT_UPDATE_TOOL_COUNT);    // 更新工具数量广播
+                });
+            });
+        }
     }
 
     onBtnSetClick() {
@@ -173,7 +184,7 @@ export class BrainGameMain extends MsgHandlerComponent {
         };
     }
 
-    private showTip(tip: string) {
+    private showTip(tip: string, confirmCB: () => void = null) {
         this.tipNode.active = true;
         Tween.stopAllByTarget(this.tipNode);
         this.tipNode.setPosition(800, 0);
@@ -181,10 +192,20 @@ export class BrainGameMain extends MsgHandlerComponent {
             .to(0.2, { position: Vec3.ZERO })
             .start();
         this.tipNode.getComponentInChildren(Label).string = tip;
+        this.tipConfirmCB = confirmCB;
     }
 
     private onBtnHideTipClick() {
         this.tipNode.active = false;
+    }
+
+    private tipConfirmCB: () => void = null;
+    onBtnConfirmTipClick() {
+        this.tipNode.active = false;
+        if (this.tipConfirmCB) {
+            this.tipConfirmCB();
+        }
+        this.tipConfirmCB = null;
     }
 
     onDestroy() {
