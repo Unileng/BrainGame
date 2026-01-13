@@ -44,6 +44,15 @@ export class BrainGameMain extends MsgHandlerComponent {
     @property({ type: Node, displayName: 'logo', })
     logo: Label = null;
 
+    @property({ type: Node, displayName: '分享按钮', })
+    shareIcon: Node = null;
+
+    @property({ type: Node, displayName: '视频按钮', })
+    videoIcon: Node = null;
+
+    @property({ type: Label, displayName: '提示确认按钮的文本', })
+    btnConfirmLabel: Label = null;
+
     @property({ type: BrainGameSetting, displayName: '设置界面', })
     settingNode: BrainGameSetting = null;
 
@@ -127,7 +136,7 @@ export class BrainGameMain extends MsgHandlerComponent {
                 SdkManager.instance.activeShare();
                 BrainGameData.tipCardCount += BrainGameData.shareGetCount;
                 EventManager.emit(EventDef.BRAINGAME_EVT_UPDATE_TOOL_COUNT);    // 更新工具数量广播
-            });
+            }, "分享获取", 1);
         }else{
             this.showTip(`是否观看视频获取${BrainGameData.shareGetCount}个工具?`, () => {
                 SdkManager.instance.showVideoAd(() => {
@@ -135,7 +144,7 @@ export class BrainGameMain extends MsgHandlerComponent {
                     EventManager.emit(EventDef.BRAINGAME_EVT_UPDATE_TOOL_COUNT);    // 更新工具数量广播
                     this.showTip(`获得${BrainGameData.shareGetCount}个工具`);
                 });
-            });
+            }, "观看视频", 2);
         }
     }
 
@@ -195,7 +204,7 @@ export class BrainGameMain extends MsgHandlerComponent {
         SdkManager.instance.showInterstitialAd();
     }
 
-    private showTip(tip: string, confirmCB: () => void = null) {
+    private showTip(tip: string, confirmCB: () => void = null, btnConfirmLabel: string = "确 定", showType: number = 0) {
         this.tipNode.active = true;
         Tween.stopAllByTarget(this.tipNode);
         this.tipNode.setPosition(800, 0);
@@ -204,6 +213,9 @@ export class BrainGameMain extends MsgHandlerComponent {
             .start();
         this.tipNode.getComponentInChildren(Label).string = tip;
         this.tipConfirmCB = confirmCB;
+        this.shareIcon.active = showType == 1;
+        this.videoIcon.active = showType == 2;
+        this.btnConfirmLabel.string = btnConfirmLabel;
     }
 
     private onBtnHideTipClick() {
